@@ -1,6 +1,8 @@
 # Let's Chat
 
-Chat application developed using `Next js`, `Chakra UI`, `Prisma` and `Mongo DB`
+**Currently Under Development**
+
+Chat application developed using `Next js`, `Chakra UI`, `Prisma`, `Mongo DB`, `Next Auth`, `web sockets`, `Apollo Graphql` and `Typescript`.
 
 ## Start Development
 
@@ -10,7 +12,7 @@ Chat application developed using `Next js`, `Chakra UI`, `Prisma` and `Mongo DB`
 yarn
 ```
 
-### Set environment variables
+### Set environment variables for both frontend and backend separately.
 
 Create an `.env` file using the example template
 
