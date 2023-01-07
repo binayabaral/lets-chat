@@ -1,6 +1,0 @@
-{
-  "watch": ["src/**/*", ".env"],
-  "ext": "ts,js,sql,.env",
-  "verbose": false,
-  "exec": "yarn build && node --experimental-specifier-resolution=node dist/index.js"
-}

@@ -1,4 +1,5 @@
 import type { AppProps } from 'next/app';
+import { Toaster } from 'react-hot-toast';
 import { ApolloProvider } from '@apollo/client';
 import { SessionProvider } from 'next-auth/react';
 
@@ -13,6 +14,7 @@ export default function App({ Component, pageProps: { session, ...pageProps } }:
       <SessionProvider session={session}>
         <ChakraProvider theme={theme}>
           <Component {...pageProps} />
+          <Toaster />
         </ChakraProvider>
       </SessionProvider>
     </ApolloProvider>

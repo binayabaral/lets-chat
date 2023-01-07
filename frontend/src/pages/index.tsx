@@ -10,8 +10,10 @@ import Chat from '../components/Chat';
 const Home: NextPage = () => {
   const { data: session } = useSession();
 
-  const reloadSession = () => {};
-  console.log('session', session);
+  const reloadSession = () => {
+    const event = new Event('visibilitychange');
+    document.dispatchEvent(event);
+  };
 
   return (
     <>
