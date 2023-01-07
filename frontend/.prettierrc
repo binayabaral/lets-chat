@@ -5,9 +5,9 @@
   "singleQuote": true,
   "arrowParens": "avoid",
   "trailingComma": "none",
-  "importOrder": ["^[./]"],
   "jsxBracketSameLine": true,
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
-  "importOrderSortByPrintWidth": true
+  "importOrderSortByPrintWidth": true,
+  "importOrder": ["^@chakra-ui/(.*)$", "^[./]"]
 }

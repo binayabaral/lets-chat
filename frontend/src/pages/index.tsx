@@ -1,7 +1,8 @@
 import Head from 'next/head';
-import { Box } from '@chakra-ui/react';
 import type { NextPage, NextPageContext } from 'next';
 import { getSession, useSession } from 'next-auth/react';
+
+import { Box } from '@chakra-ui/react';
 
 import Auth from '../components/Auth';
 import Chat from '../components/Chat';
