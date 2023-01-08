@@ -20,7 +20,13 @@ const Home: NextPage = () => {
       <Head>
         <title>Let&apos;s Chat</title>
       </Head>
-      <Box>{session?.user?.username ? <Chat /> : <Auth session={session} reloadSession={reloadSession} />}</Box>
+      <Box>
+        {session?.user?.username ? (
+          <Chat session={session} />
+        ) : (
+          <Auth session={session} reloadSession={reloadSession} />
+        )}
+      </Box>
     </>
   );
 };
