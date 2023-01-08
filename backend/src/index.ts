@@ -1,6 +1,6 @@
 import cors from 'cors';
 import express from 'express';
-import json from 'body-parser';
+import { json } from 'body-parser';
 import { createServer } from 'http';
 import { getSession } from 'next-auth/react';
 import { ApolloServer } from '@apollo/server';
