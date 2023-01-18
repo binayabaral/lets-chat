@@ -1,6 +1,7 @@
 import { Session } from 'next-auth';
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { useRouter } from 'next/router';
 import { useLazyQuery, useMutation } from '@apollo/client';
 
 import {
@@ -34,6 +35,8 @@ const ConversationModal: React.FC<ModalProps> = ({ isOpen, onClose, session }) =
   const {
     user: { id: userId }
   } = session;
+
+  const router = useRouter();
   const [username, setUsername] = useState('');
   const [participants, setParticipants] = useState<SearchedUser[]>([]);
 
@@ -63,7 +66,22 @@ const ConversationModal: React.FC<ModalProps> = ({ isOpen, onClose, session }) =
     const participantIds = [userId, ...participants.map(participant => participant.id)];
 
     try {
-      createConversation({ variables: { participantIds } });
+      const { data } = await createConversation({ variables: { participantIds } });
+
+      if (!data?.createConversation) {
+        throw new Error('Failed to create the conversation');
+      }
+
+      const {
+        createConversation: { conversationId }
+      } = data;
+
+      router.push({ query: { conversationId } });
+
+      // Clear modal state and close the modal
+      setParticipants([]);
+      setUsername('');
+      onClose();
     } catch (error: any) {
       console.log('On Create conversation error', error);
       toast.error(error?.message);

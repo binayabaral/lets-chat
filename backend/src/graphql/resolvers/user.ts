@@ -2,7 +2,7 @@ import { User } from '@prisma/client';
 import { GraphQLError } from 'graphql';
 
 import GraphQLContext from '../../domain/GraphQLContext';
-import CreateUsernameResponse from '../../domain/Response/CreateUsernameResponse';
+import CreateUsernameResponse from '../../domain/response/CreateUsernameResponse';
 
 const resolvers = {
   Query: {

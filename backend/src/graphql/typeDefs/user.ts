@@ -1,5 +1,14 @@
 const typeDefs = `#graphql
-  type searchedUser {
+  type User {
+    id: String
+    name: String
+    username: String
+    email: String
+    emailVerified: Boolean
+    image: String
+  }
+
+  type SearchedUser {
     id: String
     name: String
     image: String
@@ -7,7 +16,7 @@ const typeDefs = `#graphql
   }
 
   type Query {
-    searchUsers(username: String): [searchedUser]
+    searchUsers(username: String): [SearchedUser]
   }
 
   type Mutation {
