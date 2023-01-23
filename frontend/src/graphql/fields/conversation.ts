@@ -1,5 +1,4 @@
 const conversationFields = `
-conversations {
   id
   participants {
     user {
@@ -18,6 +17,5 @@ conversations {
     createdAt
   }
   updatedAt
-}
 `;
 export default conversationFields;

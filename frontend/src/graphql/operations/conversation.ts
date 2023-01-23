@@ -5,7 +5,9 @@ import conversationFields from '../fields/conversation';
 const Queries = {
   conversation: gql`
     query Conversations {
-      ${conversationFields}
+      conversations {
+        ${conversationFields}
+      }
     }
   `
 };
@@ -20,7 +22,15 @@ const Mutations = {
   `
 };
 
-const Subscriptions = {};
+const Subscriptions = {
+  conversationCreated: gql`
+    subscription ConversationsCreated {
+      conversationCreated {
+        ${conversationFields}
+      }
+    }
+  `
+};
 
 const conversationOperations = {
   Queries,

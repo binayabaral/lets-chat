@@ -1,8 +1,11 @@
 import { GraphQLError } from 'graphql';
+import { withFilter } from 'graphql-subscriptions';
 
 import GraphQLContext from '../../domain/GraphQLContext';
 import { PopulatedConversation } from '../../domain/Conversation';
+import { CONVERSATION_CREATED } from '../../constants/conversation';
 import populatedConversation from '../../prisma/validator/populatedConversation';
+import ConversationCreatedSubscriptionPayload from '../../domain/ConversationCreatedSubscriptionPayload';
 
 const resolvers = {
   Query: {
@@ -46,7 +49,7 @@ const resolvers = {
       context: GraphQLContext
     ): Promise<{ conversationId: string }> => {
       const { participantIds } = args;
-      const { session, prisma } = context;
+      const { session, prisma, pubSub } = context;
 
       if (!session?.user) {
         throw new GraphQLError('Not Authorized');
@@ -68,6 +71,10 @@ const resolvers = {
           include: populatedConversation
         });
 
+        pubSub.publish(CONVERSATION_CREATED, {
+          conversationCreated: conversation
+        });
+
         return {
           conversationId: conversation.id
         };
@@ -75,6 +82,25 @@ const resolvers = {
         console.log('Create conversation error', error);
         throw new GraphQLError('Error creating conversation');
       }
+    }
+  },
+  Subscription: {
+    conversationCreated: {
+      subscribe: withFilter(
+        (_: any, __: any, context: GraphQLContext) => {
+          const { pubSub } = context;
+          return pubSub.asyncIterator([CONVERSATION_CREATED]);
+        },
+        (payload: ConversationCreatedSubscriptionPayload, _, context: GraphQLContext) => {
+          const { session } = context;
+          const {
+            conversationCreated: { participants }
+          } = payload;
+
+          const userIsParticipant = !!participants.find(participant => participant.userId === session?.user.id);
+          return userIsParticipant;
+        }
+      )
     }
   }
 };
