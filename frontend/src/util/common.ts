@@ -1,4 +1,4 @@
-import { PopulatedParticipant } from '../../../backend/src/domain/Participant';
+import { PopulatedParticipant } from '../../../backend/src/domain/prismaPopulated/Participant';
 
 export const formatUsernames = (participants: Array<PopulatedParticipant>, loggedInUserId: string) => {
   const usernames = participants

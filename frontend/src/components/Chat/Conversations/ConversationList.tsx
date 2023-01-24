@@ -6,7 +6,7 @@ import { Box, Button, Text } from '@chakra-ui/react';
 
 import ConversationModel from './Modal';
 import ConversationItem from './ConversationItem';
-import { PopulatedConversation } from '../../../../../backend/src/domain/Conversation';
+import { PopulatedConversation } from '../../../../../backend/src/domain/prismaPopulated/Conversation';
 
 interface ConversationListProps {
   session: Session;

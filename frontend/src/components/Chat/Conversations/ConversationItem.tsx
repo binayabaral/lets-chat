@@ -8,7 +8,7 @@ import { BiLogOut, BiUser } from 'react-icons/bi';
 import { Avatar, Box, Button, Flex, Menu, MenuItem, MenuList, Stack, Text } from '@chakra-ui/react';
 
 import { formatUsernames } from '../../../util/common';
-import { PopulatedConversation } from '../../../../../backend/src/domain/Conversation';
+import { PopulatedConversation } from '../../../../../backend/src/domain/prismaPopulated/Conversation';
 
 const formatRelativeLocale = {
   lastWeek: 'eeee',

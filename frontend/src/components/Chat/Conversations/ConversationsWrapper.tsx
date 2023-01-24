@@ -8,7 +8,7 @@ import { Box } from '@chakra-ui/react';
 import ConversationList from './ConversationList';
 import { ConversationsData } from '../../../domain/Conversation';
 import conversationOperations from '../../../graphql/operations/conversation';
-import { PopulatedConversation } from '../../../../../backend/src/domain/Conversation';
+import { PopulatedConversation } from '../../../../../backend/src/domain/prismaPopulated/Conversation';
 
 interface ConversationsWrapperProps {
   session: Session;

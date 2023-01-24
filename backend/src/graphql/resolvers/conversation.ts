@@ -2,10 +2,10 @@ import { GraphQLError } from 'graphql';
 import { withFilter } from 'graphql-subscriptions';
 
 import GraphQLContext from '../../domain/GraphQLContext';
-import { PopulatedConversation } from '../../domain/Conversation';
 import { CONVERSATION_CREATED } from '../../constants/conversation';
 import populatedConversation from '../../prisma/validator/populatedConversation';
-import ConversationCreatedSubscriptionPayload from '../../domain/ConversationCreatedSubscriptionPayload';
+import { PopulatedConversation } from '../../domain/prismaPopulated/Conversation';
+import ConversationCreated from '../../domain/subscriptionPayload/ConversationCreated';
 
 const resolvers = {
   Query: {
@@ -91,7 +91,7 @@ const resolvers = {
           const { pubSub } = context;
           return pubSub.asyncIterator([CONVERSATION_CREATED]);
         },
-        (payload: ConversationCreatedSubscriptionPayload, _, context: GraphQLContext) => {
+        (payload: ConversationCreated, _, context: GraphQLContext) => {
           const { session } = context;
           const {
             conversationCreated: { participants }

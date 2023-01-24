@@ -1,3 +1,5 @@
+import messageFields from './message';
+
 const conversationFields = `
   id
   participants {
@@ -8,13 +10,7 @@ const conversationFields = `
     hasSeenLatestMessage
   }
   latestMessage {
-    id
-    sender {
-      id
-      username
-    }
-    body
-    createdAt
+    ${messageFields}
   }
   updatedAt
 `;
