@@ -6,6 +6,7 @@ import { useQuery } from '@apollo/client';
 import { Box } from '@chakra-ui/react';
 
 import ConversationList from './ConversationList';
+import SkeletonLoader from '../../common/SkeletonLoader';
 import { ConversationsData } from '../../../domain/Conversation';
 import conversationOperations from '../../../graphql/operations/conversation';
 import { PopulatedConversation } from '../../../../../backend/src/domain/prismaPopulated/Conversation';
@@ -27,10 +28,13 @@ const ConversationsWrapper: React.FC<ConversationsWrapperProps> = ({ session }) 
     query: { conversationId }
   } = router;
 
-  const onViewConversation = async (conversationId: string) => {
+  const onViewConversation = async (conversationId: string, hasSeenLatestMessage: boolean) => {
     // 1. Push the conversation id to url
     router.push({ query: { conversationId } });
     // 2. Mark the conversation as read
+    if (hasSeenLatestMessage) {
+      return;
+    }
   };
 
   useEffect(() => {
@@ -61,11 +65,20 @@ const ConversationsWrapper: React.FC<ConversationsWrapperProps> = ({ session }) 
       py="6"
       px="3"
       display={{ base: conversationId ? 'none' : 'flex', md: 'flex' }}>
-      <ConversationList
-        session={session}
-        conversations={conversationsData?.conversations || []}
-        onViewConversation={onViewConversation}
-      />
+      {conversationsLoading ? (
+        <Box width="100%">
+          <Box pb={5}>
+            <SkeletonLoader count={1} height="40px" width="100%" />
+          </Box>
+          <SkeletonLoader count={5} height="64px" width="100%" />
+        </Box>
+      ) : (
+        <ConversationList
+          session={session}
+          conversations={conversationsData?.conversations || []}
+          onViewConversation={onViewConversation}
+        />
+      )}
     </Box>
   );
 };

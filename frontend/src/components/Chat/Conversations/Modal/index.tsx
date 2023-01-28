@@ -93,7 +93,7 @@ const ConversationModal: React.FC<ModalProps> = ({ isOpen, onClose, session }) =
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent bg="gray.800" pb={4}>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>Find conversation participants</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <form onSubmit={onSearch}>

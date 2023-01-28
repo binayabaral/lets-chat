@@ -10,7 +10,7 @@ import { PopulatedConversation } from '../../../../../backend/src/domain/prismaP
 
 interface ConversationListProps {
   session: Session;
-  onViewConversation: (conversationId: string) => void;
+  onViewConversation: (conversationId: string, hasSeenLatestMessage: boolean) => void;
   conversations: Array<PopulatedConversation>;
 }
 
@@ -32,15 +32,21 @@ const ConversationList: React.FC<ConversationListProps> = ({ session, conversati
         </Text>
       </Button>
       <ConversationModel isOpen={isOpen} onClose={onClose} session={session} />
-      {conversations.map(conversation => (
-        <ConversationItem
-          userId={userId}
-          key={conversation.id}
-          conversation={conversation}
-          onClick={() => onViewConversation(conversation.id)}
-          isSelected={conversation.id === router.query.conversationId}
-        />
-      ))}
+      {conversations.map(conversation => {
+        const hasSeenLatestMessage = !!conversation.participants.find(participant => participant.user.id === userId)
+          ?.hasSeenLatestMessage;
+
+        return (
+          <ConversationItem
+            userId={userId}
+            key={conversation.id}
+            hasSeenLatestMessage={hasSeenLatestMessage}
+            conversation={conversation}
+            onClick={() => onViewConversation(conversation.id, hasSeenLatestMessage)}
+            isSelected={conversation.id === router.query.conversationId}
+          />
+        );
+      })}
     </Box>
   );
 };

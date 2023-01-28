@@ -81,13 +81,26 @@ const resolvers = {
       try {
         const newMessage = await prisma.message.create({
           data: {
+            id: messageId,
             senderId,
             conversationId,
-            body,
-            id: messageId
+            body
           },
           include: populatedMessage
         });
+
+        const participant = await prisma.conversationParticipant.findFirst({
+          where: {
+            userId,
+            conversationId
+          }
+        });
+
+        if (!participant) {
+          throw new GraphQLError('Participant does not exist');
+        }
+
+        const { id: participantId } = participant;
 
         const conversation = await prisma.conversation.update({
           where: {
@@ -98,7 +111,7 @@ const resolvers = {
             participants: {
               update: {
                 where: {
-                  id: senderId
+                  id: participantId
                 },
                 data: {
                   hasSeenLatestMessage: true
@@ -107,7 +120,7 @@ const resolvers = {
               updateMany: {
                 where: {
                   NOT: {
-                    userId: senderId
+                    userId
                   }
                 },
                 data: {
@@ -115,17 +128,17 @@ const resolvers = {
                 }
               }
             }
-          }
+          },
+          include: populatedConversation
         });
 
         pubSub.publish(MESSAGE_SENT, { messageSent: newMessage });
         pubSub.publish(CONVERSATION_UPDATED, { conversationUpdated: { conversation } });
+        return true;
       } catch (error: any) {
         console.log(error);
         throw new GraphQLError('Error sending message', error?.message);
       }
-
-      return true;
     }
   },
   Subscription: {

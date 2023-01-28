@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import enUS from 'date-fns/locale/en-US';
 import { formatRelative } from 'date-fns';
 import { AiOutlineEdit } from 'react-icons/ai';
+import { GoPrimitiveDot } from 'react-icons/go';
 import { MdDeleteOutline } from 'react-icons/md';
 import { BiLogOut, BiUser } from 'react-icons/bi';
 
@@ -22,7 +23,7 @@ interface ConversationItemProps {
   conversation: PopulatedConversation;
   onClick: () => void;
   isSelected: boolean;
-  // hasSeenLatestMessage: boolean | undefined;
+  hasSeenLatestMessage: boolean | undefined;
   // onDeleteConversation: (conversationId: string) => void;
   //   onEditConversation?: () => void;
   //   hasSeenLatestMessage?: boolean;
@@ -34,8 +35,8 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
   userId,
   conversation,
   onClick,
-  isSelected
-  // hasSeenLatestMessage,
+  isSelected,
+  hasSeenLatestMessage
   // onDeleteConversation
   //   selectedConversationId,
   //   onEditConversation,
@@ -111,21 +112,26 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
           )}
         </MenuList>
       </Menu> */}
-      {/* <Flex position="absolute" left="-6px">
+      <Flex position="absolute" left="-6px">
         {hasSeenLatestMessage === false && <GoPrimitiveDot fontSize={18} color="#6B46C1" />}
-      </Flex> */}
+      </Flex>
       <Avatar icon={<BiUser />} bg="brand.200" mr={4} />
       <Flex justify="space-between" align="center" width="80%" height="100%">
-        <Flex width="70%" height="100%">
+        <Flex width="calc(100% - 55px)" height="100%" direction="column" alignItems="flex-start">
           <Text fontWeight={600} whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
             {formatUsernames(conversation.participants, userId)}
           </Text>
           {conversation.latestMessage && (
-            <Box width="140%" maxWidth="360px">
-              <Text color="whiteAlpha.700" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
-                {conversation.latestMessage.body}
-              </Text>
-            </Box>
+            <Text
+              color="whiteAlpha.700"
+              whiteSpace="nowrap"
+              overflow="hidden"
+              textOverflow="ellipsis"
+              fontSize="xs"
+              pt={1}
+              maxWidth="100%">
+              {conversation.latestMessage.body}
+            </Text>
           )}
         </Flex>
         <Text color="whiteAlpha.700" textAlign="right" position="absolute" right={4} fontSize="x-small">
