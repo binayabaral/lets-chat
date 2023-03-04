@@ -24,6 +24,15 @@ const ConversationList: React.FC<ConversationListProps> = ({ session, conversati
     user: { id: userId }
   } = session;
 
+  const sortedConversations = [...conversations].sort((a, b) => {
+    const dateA = new Date(`${a.updatedAt}`);
+    const dateB = new Date(`${b.updatedAt}`);
+
+    return dateB.valueOf() - dateA.valueOf();
+  });
+
+  console.log({ conversations, sortedConversations });
+
   return (
     <Box width="100%">
       <Button py={2} px={4} mb={4} width="100%" bg="blackAlpha.300" borderRadius={4} cursor="pointer" onClick={onOpen}>
@@ -32,7 +41,7 @@ const ConversationList: React.FC<ConversationListProps> = ({ session, conversati
         </Text>
       </Button>
       <ConversationModel isOpen={isOpen} onClose={onClose} session={session} />
-      {conversations.map(conversation => {
+      {sortedConversations.map(conversation => {
         const hasSeenLatestMessage = !!conversation.participants.find(participant => participant.user.id === userId)
           ?.hasSeenLatestMessage;
 

@@ -2,10 +2,12 @@ import { GraphQLError } from 'graphql';
 import { withFilter } from 'graphql-subscriptions';
 
 import GraphQLContext from '../../domain/GraphQLContext';
-import { CONVERSATION_CREATED } from '../../constants/conversation';
+import { userIsConversationParticipant } from '../../util/common';
 import populatedConversation from '../../prisma/validator/populatedConversation';
 import { PopulatedConversation } from '../../domain/prismaPopulated/Conversation';
 import ConversationCreated from '../../domain/subscriptionPayload/ConversationCreated';
+import ConversationUpdated from '../../domain/subscriptionPayload/ConversationUpdated';
+import { CONVERSATION_CREATED, CONVERSATION_UPDATED } from '../../constants/conversation';
 
 const resolvers = {
   Query: {
@@ -132,11 +134,38 @@ const resolvers = {
         },
         (payload: ConversationCreated, _, context: GraphQLContext) => {
           const { session } = context;
+
+          if (!session?.user) {
+            throw new GraphQLError('Not Authorized');
+          }
+
           const {
             conversationCreated: { participants }
           } = payload;
 
-          const userIsParticipant = !!participants.find(participant => participant.userId === session?.user.id);
+          const userIsParticipant = userIsConversationParticipant(participants, session.user.id);
+          return userIsParticipant;
+        }
+      )
+    },
+    conversationUpdated: {
+      subscribe: withFilter(
+        (_: any, __: any, context: GraphQLContext) => {
+          const { pubSub } = context;
+          return pubSub.asyncIterator([CONVERSATION_UPDATED]);
+        },
+        (payload: ConversationUpdated, _, context: GraphQLContext) => {
+          const { session } = context;
+
+          if (!session?.user) {
+            throw new GraphQLError('Not Authorized');
+          }
+
+          const {
+            conversationUpdated: { conversation }
+          } = payload;
+
+          const userIsParticipant = userIsConversationParticipant(conversation.participants, session.user.id);
           return userIsParticipant;
         }
       )

@@ -23,6 +23,10 @@ const typeDefs = `#graphql
     hasSeenLatestMessage: Boolean
   }
 
+  type ConversationUpdatedSubscriptionPayload {
+    conversation: Conversation
+  }
+
   type Mutation {
     createConversation(participantIds: [String]): CreateConversationResponse
   }
@@ -33,6 +37,10 @@ const typeDefs = `#graphql
 
   type Subscription {
     conversationCreated: Conversation
+  }
+
+  type Subscription {
+    conversationUpdated: ConversationUpdatedSubscriptionPayload
   }
 `;
 

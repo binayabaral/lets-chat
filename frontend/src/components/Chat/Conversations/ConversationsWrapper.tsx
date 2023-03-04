@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 import { Session } from 'next-auth';
 import { useRouter } from 'next/router';
-import { gql, useMutation, useQuery } from '@apollo/client';
+import { gql, useMutation, useQuery, useSubscription } from '@apollo/client';
 
 import { Box } from '@chakra-ui/react';
 
 import ConversationList from './ConversationList';
 import SkeletonLoader from '../../common/SkeletonLoader';
 import { ConversationsData } from '../../../domain/Conversation';
+import { UpdatedConversationData } from '../../../domain/UpdateConversation';
 import conversationOperations from '../../../graphql/operations/conversation';
 import { PopulatedParticipant } from '../../../../../backend/src/domain/prismaPopulated/Participant';
 import { PopulatedConversation } from '../../../../../backend/src/domain/prismaPopulated/Conversation';
@@ -28,6 +29,26 @@ const ConversationsWrapper: React.FC<ConversationsWrapperProps> = ({ session }) 
     { markConversationAsRead: boolean },
     { userId: string; conversationId: string }
   >(conversationOperations.Mutations.markConversationAsRead);
+
+  useSubscription<UpdatedConversationData, null>(conversationOperations.Subscriptions.conversationUpdated, {
+    onData: ({ client, data }) => {
+      const { data: subscriptionData } = data;
+
+      if (!subscriptionData) return;
+
+      console.log({ subscriptionData });
+
+      const {
+        conversationUpdated: { conversation: latestConversation }
+      } = subscriptionData;
+
+      const currentlyViewingConversation = latestConversation.id === conversationId;
+
+      if (currentlyViewingConversation) {
+        onViewConversation(conversationId, false);
+      }
+    }
+  });
 
   const router = useRouter();
   const {

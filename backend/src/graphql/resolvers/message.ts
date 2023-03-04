@@ -119,6 +119,7 @@ const resolvers = {
               },
               updateMany: {
                 where: {
+                  conversationId,
                   NOT: {
                     userId
                   }

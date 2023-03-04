@@ -34,6 +34,15 @@ const Subscriptions = {
         ${conversationFields}
       }
     }
+  `,
+  conversationUpdated: gql`
+    subscription ConversationUpdated {
+      conversationUpdated {
+        conversation {
+          ${conversationFields}
+        }
+      }
+    }
   `
 };
 
