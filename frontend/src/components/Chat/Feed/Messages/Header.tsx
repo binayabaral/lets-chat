@@ -8,8 +8,6 @@ import { formatUsernames } from '../../../../util/common';
 import { ConversationsData } from '../../../../domain/Conversation';
 import ConversationOperations from '../../../../graphql/operations/conversation';
 
-// import SkeletonLoader from "../../../common/SkeletonLoader";
-
 interface MessagesHeaderProps {
   userId: string;
   conversationId: string;

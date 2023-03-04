@@ -36,8 +36,6 @@ const ConversationsWrapper: React.FC<ConversationsWrapperProps> = ({ session }) 
 
       if (!subscriptionData) return;
 
-      console.log({ subscriptionData });
-
       const {
         conversationUpdated: { conversation: latestConversation }
       } = subscriptionData;

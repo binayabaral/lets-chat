@@ -31,8 +31,6 @@ const ConversationList: React.FC<ConversationListProps> = ({ session, conversati
     return dateB.valueOf() - dateA.valueOf();
   });
 
-  console.log({ conversations, sortedConversations });
-
   return (
     <Box width="100%">
       <Button py={2} px={4} mb={4} width="100%" bg="blackAlpha.300" borderRadius={4} cursor="pointer" onClick={onOpen}>
