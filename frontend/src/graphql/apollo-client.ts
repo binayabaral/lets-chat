@@ -5,7 +5,7 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { ApolloClient, HttpLink, InMemoryCache, split } from '@apollo/client';
 
 const httpLink = new HttpLink({
-  uri: 'http://localhost:4000/graphql',
+  uri: `http://${process.env.BASE_URL}/graphql`,
   credentials: 'include'
 });
 
@@ -13,7 +13,7 @@ const wsLink =
   typeof window !== 'undefined'
     ? new GraphQLWsLink(
         createClient({
-          url: 'ws://localhost:4000/graphql/subscriptions',
+          url: `ws://${process.env.BASE_URL}/graphql/subscriptions`,
           connectionParams: async () => ({
             session: await getSession()
           })
