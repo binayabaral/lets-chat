@@ -19,6 +19,11 @@ const Mutations = {
         conversationId
       }
     }
+  `,
+  markConversationAsRead: gql`
+    mutation MarkConversationAsRead($userId: String!, $conversationId: String!) {
+      markConversationAsRead(userId: $userId, conversationId: $conversationId)
+    }
   `
 };
 

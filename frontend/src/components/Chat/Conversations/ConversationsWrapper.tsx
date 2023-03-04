@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Session } from 'next-auth';
 import { useRouter } from 'next/router';
-import { useQuery } from '@apollo/client';
+import { gql, useMutation, useQuery } from '@apollo/client';
 
 import { Box } from '@chakra-ui/react';
 
@@ -9,6 +9,7 @@ import ConversationList from './ConversationList';
 import SkeletonLoader from '../../common/SkeletonLoader';
 import { ConversationsData } from '../../../domain/Conversation';
 import conversationOperations from '../../../graphql/operations/conversation';
+import { PopulatedParticipant } from '../../../../../backend/src/domain/prismaPopulated/Participant';
 import { PopulatedConversation } from '../../../../../backend/src/domain/prismaPopulated/Conversation';
 
 interface ConversationsWrapperProps {
@@ -23,17 +24,82 @@ const ConversationsWrapper: React.FC<ConversationsWrapperProps> = ({ session }) 
     subscribeToMore
   } = useQuery<ConversationsData, null>(conversationOperations.Queries.conversation);
 
+  const [markConversationAsRead] = useMutation<
+    { markConversationAsRead: boolean },
+    { userId: string; conversationId: string }
+  >(conversationOperations.Mutations.markConversationAsRead);
+
   const router = useRouter();
   const {
     query: { conversationId }
   } = router;
+  const {
+    user: { id: userId }
+  } = session;
 
   const onViewConversation = async (conversationId: string, hasSeenLatestMessage: boolean) => {
-    // 1. Push the conversation id to url
     router.push({ query: { conversationId } });
-    // 2. Mark the conversation as read
+
     if (hasSeenLatestMessage) {
       return;
+    }
+
+    try {
+      await markConversationAsRead({
+        variables: {
+          userId,
+          conversationId
+        },
+        optimisticResponse: {
+          markConversationAsRead: true
+        },
+        update: cache => {
+          const participantsFragment = cache.readFragment<{ participants: Array<PopulatedParticipant> }>({
+            id: `Conversation:${conversationId}`,
+            fragment: gql`
+              fragment Participants on Conversation {
+                participants {
+                  user {
+                    id
+                    username
+                  }
+                  hasSeenLatestMessage
+                }
+              }
+            `
+          });
+
+          if (!participantsFragment) return;
+
+          const participants = [...participantsFragment.participants];
+
+          const userParticipantIndex = participants.findIndex(participant => participant.user.id === userId);
+
+          // Return if doesn't exist
+          if (userParticipantIndex === -1) return;
+
+          const userParticipant = participants[userParticipantIndex];
+
+          participants[userParticipantIndex] = {
+            ...userParticipant,
+            hasSeenLatestMessage: true
+          };
+
+          cache.writeFragment({
+            id: `Conversation:${conversationId}`,
+            fragment: gql`
+              fragment UpdatedParticipant on Conversation {
+                participants
+              }
+            `,
+            data: {
+              participants
+            }
+          });
+        }
+      });
+    } catch (error) {
+      console.log('onViewConversationError', error);
     }
   };
 

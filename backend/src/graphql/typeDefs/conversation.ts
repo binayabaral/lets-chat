@@ -5,6 +5,10 @@ const typeDefs = `#graphql
     conversationId: String
   }
 
+  type Mutation {
+    markConversationAsRead(userId: String!, conversationId: String!): Boolean
+  }
+
   type Conversation {
     id: String
     latestMessage: Message

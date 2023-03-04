@@ -112,11 +112,11 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
           )}
         </MenuList>
       </Menu> */}
-      <Flex position="absolute" left="-6px">
+      <Flex position="absolute" right={0} top={0}>
         {hasSeenLatestMessage === false && <GoPrimitiveDot fontSize={18} color="#6B46C1" />}
       </Flex>
-      <Avatar icon={<BiUser />} bg="brand.200" mr={4} />
-      <Flex justify="space-between" align="center" width="80%" height="100%">
+      <Avatar icon={<BiUser />} bg="brand.200" />
+      <Flex justify="space-between" align="center" width="calc(100% - 55px)" height="100%">
         <Flex width="calc(100% - 55px)" height="100%" direction="column" alignItems="flex-start">
           <Text fontWeight={600} whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
             {formatUsernames(conversation.participants, userId)}
