@@ -1,7 +1,5 @@
 # Let's Chat
 
-**Currently Under Development**
-
 Chat application developed using `Next js`, `Chakra UI`, `Prisma`, `Mongo DB`, `Next Auth`, `web sockets`, `Apollo Graphql` and `Typescript`.
 
 ## Start Development
